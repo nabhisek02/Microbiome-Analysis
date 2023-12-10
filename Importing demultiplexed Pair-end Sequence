@@ -1,0 +1,1 @@
+qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'   --input-path corrected_manifest_file.tsv   --output-path paired-end-demux.qza   --input-format PairedEndFastqManifestPhred33V2
