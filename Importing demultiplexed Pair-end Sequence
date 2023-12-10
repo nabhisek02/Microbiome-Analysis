@@ -1,1 +1,18 @@
+# Importing data in QIIME2
 qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'   --input-path corrected_manifest_file.tsv   --output-path paired-end-demux.qza   --input-format PairedEndFastqManifestPhred33V2
+
+# Creating a demultiplexed summary file in qzv format. You can visualize this in QIIME2 view
+qiime demux summarize \
+  --i-data paired-end-demux.qza \
+  --o-visualization demux-summary.qzv
+
+# Denoising Step: Remove the low quality sequence read
+qiime dada2 denoise-paired \
+  --i-demultiplexed-seqs paired-end-demux.qza \
+  --p-trim-left-f 0 \
+  --p-trim-left-r 0 \
+  --p-trunc-len-f 220 \
+  --p-trunc-len-r 210 \
+  --o-table table-dada2.qza \
+  --o-representative-sequences rep-seqs-dada2.qza \
+  --o-denoising-stats stats-dada2.qza
