@@ -1,0 +1,56 @@
+## Creating a manifest file for my samples
+
+import os
+import csv
+
+# Define the base directory where your samples are located after extraction.
+base_dir = "/mnt/c/Users/nabhi/emp-paired-end-sequences/extracted_sequences"
+
+# The path for the manifest file that will be created
+manifest_file = "/mnt/c/Users/nabhi/emp-paired-end-sequences/extracted_sequences/corrected_manifest_file.tsv"
+
+# Start by writing the header of the manifest file
+manifest_data = [('sample-id', 'forward-absolute-filepath', 'reverse-absolute-filepath')]
+
+# Walk through the directory structure starting at base_dir
+for sample_dir_name in os.listdir(base_dir):
+    sample_dir_path = os.path.join(base_dir, sample_dir_name)
+    
+    # Initialize a dictionary to hold the file paths for forward and reverse reads
+    sample_files = {'forward': '', 'reverse': ''}
+    
+    # Check if the path is a directory
+    if os.path.isdir(sample_dir_path):
+        # Walk through all subdirectories and files
+        for root, dirs, files in os.walk(sample_dir_path):
+            for file_name in files:
+                if file_name.endswith('.fq'):
+                    # Construct the full file path
+                    file_path = os.path.abspath(os.path.join(root, file_name))
+                    
+                    # Determine whether the file is forward or reverse
+                    if '1.1' in file_name:
+                        sample_files['forward'] = file_path
+                    elif '1.2' in file_name:
+                        sample_files['reverse'] = file_path
+        
+        # Check if both forward and reverse reads were found
+        if sample_files['forward'] and sample_files['reverse']:
+            # Verify that the paths point to files
+            if os.path.isfile(sample_files['forward']) and os.path.isfile(sample_files['reverse']):
+                manifest_data.append((sample_dir_name, sample_files['forward'], sample_files['reverse']))
+            else:
+                print(f"Invalid file path for sample {sample_dir_name}:")
+                print(f"Forward path: {sample_files['forward']}")
+                print(f"Reverse path: {sample_files['reverse']}")
+        else:
+            print(f"Missing reads for sample {sample_dir_name}")
+
+# Write the manifest data to the manifest TSV file
+with open(manifest_file, 'w', newline='') as f:
+    writer = csv.writer(f, delimiter='\t', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    writer.writerow(['sample-id', 'forward-absolute-filepath', 'reverse-absolute-filepath'])  # Write the header
+    for data in manifest_data[1:]:  # Write the data excluding the header placeholder
+        writer.writerow(data)
+
+print(f"Manifest file created: {manifest_file}")
