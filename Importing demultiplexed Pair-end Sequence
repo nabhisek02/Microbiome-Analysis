@@ -6,7 +6,7 @@ qiime demux summarize \
   --i-data paired-end-demux.qza \
   --o-visualization demux-summary.qzv
 
-# Denoising Step: Remove the low quality sequence read
+# Denoising Step: Remove the low-quality sequence read
 qiime dada2 denoise-paired \
   --i-demultiplexed-seqs paired-end-demux.qza \
   --p-trim-left-f 0 \
@@ -16,3 +16,6 @@ qiime dada2 denoise-paired \
   --o-table table-dada2.qza \
   --o-representative-sequences rep-seqs-dada2.qza \
   --o-denoising-stats stats-dada2.qza
+
+
+#
