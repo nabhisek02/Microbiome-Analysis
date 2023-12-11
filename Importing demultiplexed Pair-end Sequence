@@ -18,4 +18,5 @@ qiime dada2 denoise-paired \
   --o-denoising-stats stats-dada2.qza
 
 
-#
+# Phylogenetic tree 
+qiime feature-classifier classify-sklearn   --i-classifier silva-138-99-515-806-nb-classifier.qza   --i-reads rep-seqs-dada2.qza   --o-classification taxonomy.qza
