@@ -100,3 +100,20 @@ qiime feature-table heatmap \
   --m-metadata-file sample-metadata.tsv \
   --m-metadata-column your-metadata-category \
   --o-visualization heatmap.qzv
+
+# Alpha Diversity Boxplots
+
+qiime diversity alpha-group-significance \
+  --i-alpha-diversity core-metrics-results/shannon_vector.qza \
+  --m-metadata-file sample-metadata.tsv \
+  --o-visualization core-metrics-results/shannon-group-significance.qzv
+
+# Visualizing Beta diversity
+
+qiime diversity beta-group-significance \
+  --i-distance-matrix core-metrics-results/bray_curtis_distance_matrix.qza \
+  --m-metadata-file sample-metadata.tsv \
+  --m-metadata-column YOUR_METADATA_COLUMN \
+  --o-visualization core-metrics-results/bray-curtis-group-significance.qzv \
+  --p-pairwise
+
