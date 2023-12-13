@@ -1,0 +1,53 @@
+# To get a species-level count of taxa in your sequence analysis using QIIME 2, you will 
+need to process your taxonomy classification results. Here's a step-by-step guide:
+
+1. Taxonomic Classification
+Ensure that you have already classified your sequences using a feature classifier 
+(like Greengenes or SILVA). This step provides you with a taxonomy.qza file.
+
+2. Export the Taxonomy Data
+First, export the taxonomy data from the taxonomy.qza file:
+
+# qiime tools export \
+  --input-path taxonomy.qza \
+  --output-path exported-taxonomy
+
+3. Convert the Taxonomy Data to a TSV File
+The exported taxonomy data will be in a QIIME 2-specific format. You need to convert it 
+into a TSV (Tab Separated Values) file:
+
+# biom convert \
+  -i exported-taxonomy/feature-table.biom \
+  -o exported-taxonomy/feature-table.tsv \
+  --to-tsv
+
+4. Processing the TSV File for Species Count
+You can now process the TSV file to count the unique species. This can be done using a scripting 
+language like Python:
+
+###
+import pandas as pd
+
+# Load the TSV file
+taxonomy_df = pd.read_csv('exported-taxonomy/taxonomy.tsv', sep='\t', header=None)
+
+# Extract the species information
+# Assuming the last column contains the taxonomy string
+taxonomy_df['species'] = taxonomy_df.iloc[:, -1].str.extract('s__([^;]+)')
+
+# Count unique species
+unique_species = taxonomy_df['species'].nunique()
+
+print(f"Number of unique species: {unique_species}")
+In this script, we extract the species information from the taxonomy string. The species name is 
+typically indicated by 's__' in the taxonomy string.
+
+5. Notes:
+Replace 'exported-taxonomy/taxonomy.tsv' with your actual file path.
+
+The accuracy of species-level identification depends on the quality of your sequencing data 
+and the reference database used for classification. Some sequences might not be classified down 
+to the species level, which is common in microbial community analysis due to limitations in 
+current reference databases and the resolution of 16S rRNA gene sequencing. This approach will give 
+you an approximate count of the different species present in your samples as identified by your 
+chosen classifier.
