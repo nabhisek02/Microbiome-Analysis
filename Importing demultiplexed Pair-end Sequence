@@ -154,6 +154,14 @@ plugin:
 
 qiime longitudinal anova \
   --m-metadata-file ./core-metrics-results/faith_pd_vector.qza \
+
+
+# Exporting a phylogenetic tree
+
+qiime tools export \
+  --input-path rooted-tree.qza \
+  --output-path exported-tree
+
   --m-metadata-file ./metadata.tsv \
   --p-formula 'faith_pd ~ <factor A> * <factor B>' \
   --o-visualization ./core-metrics-results/faiths_pd_anova.qzv
