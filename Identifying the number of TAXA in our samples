@@ -1,46 +1,53 @@
-# o determine the number of bacterial taxa present in your sequence analysis using QIIME 2, you can follow these steps:
+# o determine the number of bacterial taxa present in your sequence analysis using QIIME 2, you 
+can follow these steps:
 
 1. Taxonomic Analysis
-First, ensure that you've performed a taxonomic analysis on your sequences. This involves assigning taxonomy to your sequences using a classifier (like Greengenes or SILVA for bacteria). If you haven't done this yet, you can use the following command with a pre-trained classifier:
 
-bash
-Copy code
+First, ensure that you've performed a taxonomic analysis on your sequences. This involves 
+assigning taxonomy to your sequences using a classifier (like Greengenes or SILVA for bacteria). 
+If you haven't done this yet, you can use the following command with a pre-trained classifier:
+
+###
 qiime feature-classifier classify-sklearn \
   --i-classifier path-to-pretrained-classifier.qza \
   --i-reads rep-seqs.qza \
   --o-classification taxonomy.qza
-Replace path-to-pretrained-classifier.qza with the path to your chosen classifier and rep-seqs.qza with your sequences.
+
+Replace path-to-pretrained-classifier.qza with the path to your chosen classifier and rep-seqs.qza 
+with your sequences.
 
 2. Generate a Taxa Bar Plot
-Create a taxa bar plot to visualize the taxonomic composition of your samples. This won't give you the exact count of taxa but will provide a visual overview.
+Create a taxa bar plot to visualize the taxonomic composition of your samples. This won't give 
+you the exact count of taxa but will provide a visual overview.
 
-bash
-Copy code
+###
 qiime taxa barplot \
   --i-table table.qza \
   --i-taxonomy taxonomy.qza \
   --m-metadata-file sample-metadata.tsv \
   --o-visualization taxa-bar-plots.qzv
+
 3. Counting Unique Taxa
 To get a precise count of unique taxa, you'll need to export and process the taxonomy data:
 
 Export Taxonomy Data
 
-bash
-Copy code
+###
 qiime tools export \
   --input-path taxonomy.qza \
   --output-path exported-taxonomy
+
 Process the Exported Data
 
-The exported file will be in a format like TSV (tab-separated values). You can open this file using software like Excel, R, or Python.
-Count the number of unique taxonomic identifiers (e.g., species or genus names, depending on the level of classification you're interested in).
+The exported file will be in a format like TSV (tab-separated values). You can open this file 
+using software like Excel, R, or Python. Count the number of unique taxonomic identifiers 
+(e.g., species or genus names, depending on the level of classification you're interested in).
+
 Using Python for Counting
 
 If you're comfortable with Python, you can quickly count unique taxa using a script. Here's an example:
 
-python
-Copy code
+
 import pandas as pd
 
 # Load the exported taxonomy file
@@ -49,11 +56,19 @@ df = pd.read_csv('exported-taxonomy/taxonomy.tsv', sep='\t')
 # Count unique taxa - adjust the level as needed (e.g., species, genus)
 unique_taxa = df['Taxon'].nunique()
 print(f"Number of unique taxa: {unique_taxa}")
-This script reads the exported taxonomy data and counts the number of unique taxa. Make sure to adjust the file path and column names as necessary.
+
+This script reads the exported taxonomy data and counts the number of unique taxa. Make sure to 
+adjust the file path and column names as necessary.
 
 4. Reviewing Results
+
 The number you get represents the unique bacterial taxa identified in your sample set.
-Remember, the level of taxonomic resolution (e.g., species, genus, family) will impact the count. Higher taxonomic levels (like phylum or class) will yield fewer unique categories than lower levels (like species).
-Notes:
-The taxonomic resolution and accuracy depend on the quality of your sequences, the chosen classifier, and the reference database.
-If you're interested in a specific taxonomic level (like species or genus), you might need to parse the taxonomy strings accordingly.
+Remember, the level of taxonomic resolution (e.g., species, genus, family) will impact the 
+count. Higher taxonomic levels (like phylum or class) will yield fewer unique categories than 
+lower levels (like species).
+
+### Notes:
+
+The taxonomic resolution and accuracy depend on the quality of your sequences, the chosen 
+classifier, and the reference database. If you're interested in a specific taxonomic level 
+(like species or genus), you might need to parse the taxonomy strings accordingly.
