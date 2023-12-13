@@ -68,12 +68,41 @@ qiime composition ancom \
   --m-metadata-column your-metadata-category \
   --o-visualization ancom.qzv
 
+# Alpha Diversity
+## Faith’s phylogenetic diversity
+
+qiime diversity alpha-group-significance \
+  --i-alpha-diversity ./core-metrics-results/faith_pd_vector.qza \
+  --m-metadata-file ./sample-metadata.tsv \
+  --o-visualization ./core-metrics-results/faiths_pd_statistics.qzv
+
+## Pielou’s evenness value
+qiime diversity alpha-group-significance \
+ --i-alpha-diversity ./core-metrics-results/evenness_vector.qza \
+ --m-metadata-file ./sample-metadata.tsv \
+ --o-visualization ./core-metrics-results/evenness_statistics.qzv
+
+# Beta Diversity
+
+qiime diversity beta-group-significance \
+  --i-distance-matrix core-metrics-results/unweighted_unifrac_distance_matrix.qza \
+  --m-metadata-file sample-metadata.tsv \
+  --m-metadata-column subject \
+  --o-visualization core-metrics-results/unweighted-unifrac-subject-significance.qzv
+
+qiime diversity beta-group-significance \
+  --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza \
+  --m-metadata-file sample-metadata.tsv \
+  --m-metadata-column subject \
+  --o-visualization core-metrics-results/weighted-unifrac-subject-significance.qzv
+
+
 # Alpha Diversity Rarefaction
 
 qiime diversity alpha-rarefaction \
   --i-table table-dada2.qza \
   --i-phylogeny rooted-tree.qza \
-  --p-max-depth <value> \                 ## Adjust --p-max-depth to a value suitable for your dataset based on the demux summary
+  --p-max-depth <value> \  ## Adjust --p-max-depth to a value suitable for your dataset based on the demux summary
   --m-metadata-file sample-metadata.tsv \
   --o-visualization alpha-rarefaction.qzv
 
@@ -116,4 +145,17 @@ qiime diversity beta-group-significance \
   --m-metadata-column YOUR_METADATA_COLUMN \
   --o-visualization core-metrics-results/bray-curtis-group-significance.qzv \
   --p-pairwise
+
+
+# In some experiments, multiple interacting factors may impact alpha diversity together. If our alpha 
+diversity estimates follow a normal distribution, we may use analysis of variance (ANOVA) to test 
+whether multiple effects significantly impact alpha diversity. This test is present in the q2-longitudinal 
+plugin:
+
+qiime longitudinal anova \
+  --m-metadata-file ./core-metrics-results/faith_pd_vector.qza \
+  --m-metadata-file ./metadata.tsv \
+  --p-formula 'faith_pd ~ <factor A> * <factor B>' \
+  --o-visualization ./core-metrics-results/faiths_pd_anova.qzv
+
 
