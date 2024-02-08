@@ -1,4 +1,4 @@
-# o determine the number of bacterial taxa present in your sequence analysis using QIIME 2, you 
+# To determine the number of bacterial taxa present in your sequence analysis using QIIME 2, you 
 can follow these steps:
 
 1. Taxonomic Analysis
@@ -13,7 +13,7 @@ qiime feature-classifier classify-sklearn \
   --i-reads rep-seqs.qza \
   --o-classification taxonomy.qza
 
-Replace path-to-pretrained-classifier.qza with the path to your chosen classifier and rep-seqs.qza 
+Replace "path-to-pretrained-classifier.qza" with the path to your chosen classifier and "rep-seqs.qza" 
 with your sequences.
 
 2. Generate a Taxa Bar Plot
