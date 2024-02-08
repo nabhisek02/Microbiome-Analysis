@@ -1,5 +1,7 @@
 ## Creating a manifest file for my samples
 
+I am using UBUNTU as a virtual machine in my Windows computer, that's why I am writing "mnt" to access my computer through the virtual machine.
+
 import os
 import csv
 
